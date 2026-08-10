@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Skill Lab: Prompting in a New Generation of AI</title>
+<title>Skill Lab: Prompting Well — Communicating Clearly with AI</title>
 <style>
   :root{
     --ink:#1a1f2b;
@@ -132,7 +132,7 @@
 
   <header class="hero">
     <p class="eyebrow">Faculty Development &middot; AI Literacy &middot; Module 1 Skill Lab</p>
-    <h1>Prompting in a New Generation of AI</h1>
+    <h1>Prompting Well: Communicating Clearly with AI</h1>
     <p>A hands-on lab. You'll build prompts, compare weak and strong versions, and test your work in Claude &mdash; across models and effort levels &mdash; to see how clear communication shapes what you get back.</p>
   </header>
 
@@ -141,14 +141,16 @@
     <ul>
       <li>Communicate a task to Claude the way you'd brief a capable colleague &mdash; using <b>Task, Context, Constraints, Output</b>.</li>
       <li>Run the same prompt in different <b>models</b> (Sonnet 5, Opus 4.8) and <b>effort levels</b> (extended thinking on/off) and notice the difference.</li>
-      <li>Treat the first response as a <b>starting point</b> and refine through conversation.</li>
+      <li>Treat the first response as a <b>draft to steer</b> &mdash; direct and reshape it toward what you need.</li>
       <li>Use Claude as a <b>thinking partner</b> &mdash; to critique, compare, and stress-test your own design.</li>
     </ul>
   </div>
 
   <div class="try" style="margin-top:20px;">
     <p class="th">Before you begin &mdash; open Claude in another tab</p>
-    <p>Go to <a href="https://claude.ai" target="_blank" rel="noopener">claude.ai</a> and keep it open beside this page. Throughout the lab you'll copy prompts from here and paste them there. Watch for two controls in Claude's message box:</p>
+    <p>Go to <a href="https://claude.ai" target="_blank" rel="noopener">claude.ai</a> and keep it open beside this page. Throughout the lab you'll copy prompts from here and paste them there.</p>
+    <p><b>Run the whole lab in a private / incognito browser window.</b> That keeps every A/B comparison clean and your cohort's results comparable, because no saved memory or earlier chat can quietly influence a reply. (Memory is a variable <i>you</i> control &mdash; you'll work with it in the companion Claude Onboarding lab.)</p>
+    <p>Watch for two controls in Claude's message box:</p>
     <div class="modelrow">
       <div class="mchip">
         <h4>Model selector</h4>
@@ -187,6 +189,9 @@
       <p class="th">Try it in Claude</p>
       <p>Paste <b>both</b> prompts (one at a time, new chat each) into <b>Sonnet 5</b>. Read the two responses side by side.</p>
       <p class="mini">Which one would need less editing before you could use it? Notice how much of the "improvement" came from you defining the task, not from any special wording.</p>
+      <p style="margin-top:8px;"><b>Then steer it.</b> Don't stop at the first reply &mdash; send one follow-up:</p>
+      <div class="prompt" id="p1c">Add a 3-minute debrief I can lead at the end, with two questions that surface why hypertension stays poorly controlled.</div>
+      <button class="copy" data-target="p1c">Copy</button>
     </div>
 
     <div class="reflect">
@@ -223,6 +228,9 @@
       <div class="prompt" id="p2c" style="margin-top:8px;">Here are the learning objectives and case materials for my unit. Identify where the current case requires clinical reasoning and where students could answer primarily through recall.</div>
       <button class="copy" data-target="p2c">Copy prompt</button>
       <p class="mini">This is a very different use of AI than "make my assignment better." You've supplied the intellectual environment Claude should work in.</p>
+      <p style="margin-top:8px;"><b>Then steer it.</b> Send one follow-up to tighten it:</p>
+      <div class="prompt" id="p2d">Revise the question so it can't be answered by restating the definition of UDL &mdash; force students to apply it to a specific classroom problem.</div>
+      <button class="copy" data-target="p2d">Copy</button>
     </div>
 
     <div class="reflect">
@@ -259,6 +267,9 @@
       <p class="th">Try it in Claude &mdash; then compare models</p>
       <p>Run the strong prompt in <b>Sonnet 5</b>. Then run the exact same prompt in <b>Opus 4.8</b>.</p>
       <p class="mini">Where do they differ? A task with genuine intellectual tension (like "end in disagreement") is a good place to feel what the deeper-reasoning model adds &mdash; and whether it's worth it for this task.</p>
+      <p style="margin-top:8px;"><b>Then steer it.</b> Push on the result you got:</p>
+      <div class="prompt" id="p3c">Keep the disagreement, but make the two interpretations closer so the choice is genuinely hard rather than obvious.</div>
+      <button class="copy" data-target="p3c">Copy</button>
     </div>
 
     <div class="reflect">
@@ -290,9 +301,11 @@
     </div>
 
     <div class="try">
-      <p class="th">Try it in Claude</p>
-      <p>Run the strong prompt. Then, in the same chat, change only the <i>output</i>: "Put that into a table with four columns: scenario, common novice interpretation, more sophisticated interpretation, and a question that moves the student forward."</p>
-      <p class="mini">Notice you didn't restate the whole task &mdash; you just reshaped the output. That's the conversation working for you.</p>
+      <p class="th">Try it in Claude &mdash; then steer it</p>
+      <p>Run the strong prompt. Then send one follow-up that changes only the <i>output</i>:</p>
+      <div class="prompt" id="p4c">Put that into a table with four columns: scenario, common novice interpretation, more sophisticated interpretation, and a question that moves the student forward.</div>
+      <button class="copy" data-target="p4c">Copy</button>
+      <p class="mini">Notice you didn't restate the whole task &mdash; you just reshaped the output. Shaping the response is the portable move: it works the same in chat today and when you're directing an agentic tool later.</p>
     </div>
 
     <div class="reflect">
@@ -360,11 +373,11 @@
   <!-- ============ ITERATION ============ -->
   <section class="step">
     <span class="kicker">Principle 5</span>
-    <h2>The first response is the beginning</h2>
-    <p class="lead">A prompt doesn't have to contain everything. Claude works conversationally &mdash; review what it produces, name what's wrong, and direct it. Don't spend twenty minutes crafting a "perfect" prompt; give it enough to begin, then steer.</p>
+    <h2>Steer the response &mdash; don't perfect the prompt</h2>
+    <p class="lead">A prompt doesn't have to contain everything. Give Claude enough to begin, then steer, direct, and reshape what comes back. Don't spend twenty minutes crafting a "perfect" prompt. Shaping the output is the skill that transfers &mdash; it works the same in a chat today and in agentic tools that don't have a chat window at all.</p>
 
     <div class="try">
-      <p class="th">Try a refinement chain in Claude</p>
+      <p class="th">Try steering a result in Claude</p>
       <p>Start with any case Claude gave you above, then send these <i>in sequence</i>, one message at a time:</p>
       <div class="prompt" id="p5a" style="margin-top:8px;">Make the clinical ambiguity greater.</div>
       <button class="copy" data-target="p5a">Copy</button>
@@ -372,7 +385,7 @@
       <button class="copy" data-target="p5b">Copy</button>
       <div class="prompt" id="p5c" style="margin-top:10px;">Good. Now remove the diagnostic label so students have to infer it.</div>
       <button class="copy" data-target="p5c">Copy</button>
-      <p class="mini">Each turn shapes the result a little more. This is the recommended way to work &mdash; not one giant prompt.</p>
+      <p class="mini">Each turn shapes the result a little more. Steering beats one giant prompt.</p>
     </div>
   </section>
 
@@ -416,29 +429,41 @@
   <!-- ============ EXPERTISE ============ -->
   <section class="step">
     <span class="kicker">Principle 7</span>
-    <h2>Your expertise still decides</h2>
-    <p class="lead">Better prompting doesn't remove Claude's limits. A polished response can still be wrong &mdash; and plausible errors are the hard ones to catch. Your judgment moves upstream: you define the problem, supply the disciplinary context, and evaluate what belongs in your teaching.</p>
+    <h2>Verification is a habit that decays &mdash; build it now</h2>
+    <p class="lead">Better prompting doesn't remove Claude's limits. A polished response can still be wrong, and plausible errors are the hard ones to catch. Your judgment moves upstream: you define the problem, supply the disciplinary context, and decide what belongs in your teaching.</p>
 
-    <p style="color:var(--muted);">Tap each item as you check the last response you got:</p>
+    <p>Here is the trap, and it's well documented: once responses keep passing your checks, you stop running them. Verification lapses <i>precisely because</i> the model looks reliable. If you let that happen here, you carry a <b>miscalibrated</b> sense of AI accuracy into agentic tools later &mdash; where output arrives faster than you can read it and a single unchecked error compounds downstream. This is not a "later module" skill. Building the habit now is what keeps the next rungs of the ladder reachable.</p>
+
+    <p style="color:var(--muted);">Start with the check that matters most to you &mdash; for most people, at first, that's <b>hallucinated facts and citations</b>. Tap each item as you verify the last response you got:</p>
     <ul class="check" id="verifyList">
-      <li>Every factual claim and citation is verified, not just plausible-sounding.</li>
+      <li>Every factual claim and citation is verified against a real source &mdash; not just plausible-sounding.</li>
       <li>Any clinical, technical, or procedural detail is realistic and correct.</li>
       <li>Disagreement among experts or scholars hasn't been flattened into one view.</li>
       <li>Cultural or disciplinary context hasn't been stripped away.</li>
       <li>The activity actually assesses the learning objective &mdash; not just something engaging.</li>
     </ul>
 
+    <div class="try">
+      <p class="th">Make it a practice, not a one-time check</p>
+      <p>Three moves that hold up as the work gets more automated:</p>
+      <p><b>1. Keep a short personal checklist</b> of what must be true in your field, and run it <i>by hand every time</i> &mdash; even when you're sure it will pass.</p>
+      <p><b>2. Expect it to stop feeling necessary.</b> When checking starts to feel like a formality, that's the decay &mdash; not proof the model is safe. Catching yourself in that slip <i>is</i> the skill.</p>
+      <p><b>3. Re-check adversarially.</b> Paste your checklist into a <i>fresh</i> chat and ask Claude to argue against its own draft &mdash; always before anything reaches students:</p>
+      <div class="prompt" id="p7a">You are a skeptical fact-checker. Here is a draft I plan to give students. List every factual or citation claim you cannot verify, and every place a specialist might disagree. Do not rewrite it &mdash; only find problems.</div>
+      <button class="copy" data-target="p7a">Copy</button>
+    </div>
+
     <div class="reflect">
-      <p class="rh">Closing reflection</p>
-      <p>The real faculty skill is broader than prompting: it's formulating a problem clearly enough that a capable collaborator &mdash; human or AI &mdash; could understand the intellectual work. What's one place in your teaching you'll use this?</p>
-      <textarea placeholder="I'll use this to..."></textarea>
+      <p class="rh">Closing reflection &mdash; write your checklist</p>
+      <p>Name the two or three checks that must pass before anything you make with AI reaches your students. This is your personal checklist &mdash; keep it, and expect to have to remind yourself to run it.</p>
+      <textarea placeholder="Before it reaches students, I will verify..."></textarea>
     </div>
   </section>
 
   <section class="step">
     <span class="kicker">Takeaway</span>
     <h2>You don't need a secret language</h2>
-    <p class="lead">Explain the work as you would to a capable collaborator who knows a great deal about the world but very little about your particular course. Give it the <b>task</b>, the <b>context</b>, the <b>constraints</b>, and the <b>output</b> you need. Then inspect what it gives you and continue the conversation &mdash; asking it to critique, compare, challenge, and analyze, not just generate.</p>
+    <p class="lead">Explain the work as you would to a capable collaborator who knows a great deal about the world but very little about your particular course. Give it the <b>task</b>, the <b>context</b>, the <b>constraints</b>, and the <b>output</b> you need. Then inspect what it gives you and steer it &mdash; asking it to critique, compare, challenge, and analyze, not just generate.</p>
   </section>
 
   <footer>
