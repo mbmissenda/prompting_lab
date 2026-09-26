@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Skill Lab: Prompting Well — Communicating Clearly with AI</title>
+<title>Skill Lab: Prompting Well — Describing What You Want to AI</title>
 <style>
   :root{
     --ink:#1a1f2b;
@@ -19,6 +19,8 @@
     --warn-soft:#fbf0e3;
     --claude:#c96442;
     --claude-soft:#f8ede8;
+    --info:#1f5f99;
+    --info-soft:#e8f1fa;
     --radius:12px;
     --shadow:0 1px 2px rgba(20,25,40,.06),0 6px 20px rgba(20,25,40,.05);
   }
@@ -46,9 +48,15 @@
   .goals li{margin:6px 0;color:var(--muted);}
   .goals li b{color:var(--ink);}
 
+  nav.toc{margin:18px 0 0;font-size:14.5px;}
+  nav.toc ol{margin:6px 0 0;padding-left:22px;columns:2;column-gap:28px;}
+  @media(max-width:640px){nav.toc ol{columns:1;}}
+  nav.toc li{margin:3px 0;break-inside:avoid;}
+
   section.step{margin:34px 0;padding-top:8px;border-top:1px solid var(--line);}
   .kicker{display:inline-block;background:var(--accent-soft);color:var(--accent);font-weight:700;
     font-size:12.5px;letter-spacing:.05em;padding:4px 10px;border-radius:999px;margin-bottom:10px;}
+  .kicker.new{background:var(--good-soft);color:var(--good);}
   section.step h2{font-size:22px;margin:6px 0 4px;line-height:1.25;}
   section.step > p{color:var(--muted);}
   section.step > p.lead{color:var(--ink);}
@@ -59,16 +67,20 @@
   .card{border:1px solid var(--line);border-radius:var(--radius);padding:16px 16px 14px;background:#fff;box-shadow:var(--shadow);display:flex;flex-direction:column;}
   .card.weak{background:var(--warn-soft);border-color:#f0dcc4;}
   .card.strong{background:var(--good-soft);border-color:#cdeadd;}
+  .card.alt{background:var(--info-soft);border-color:#cfe0f1;}
   .card .tag{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
   .card.weak .tag{color:var(--warn);}
   .card.strong .tag{color:var(--good);}
+  .card.alt .tag{color:var(--info);}
   .prompt{font-family:"SF Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
     font-size:14px;line-height:1.5;background:#fff;border:1px solid var(--line);border-radius:8px;
     padding:11px 12px;color:var(--ink);white-space:pre-wrap;flex:1;}
   .card.weak .prompt{background:#fffaf3;}
   .card.strong .prompt{background:#f5fcf8;}
+  .card.alt .prompt{background:#f7fbff;}
   .whymiss{font-size:14px;color:var(--warn);margin:10px 2px 0;}
   .whyfix{font-size:14px;color:var(--good);margin:10px 2px 0;}
+  .whyalt{font-size:14px;color:var(--info);margin:10px 2px 0;}
 
   button.copy{margin-top:10px;align-self:flex-start;border:1px solid var(--accent);color:var(--accent);
     background:#fff;font-weight:600;font-size:13px;padding:7px 12px;border-radius:8px;cursor:pointer;transition:.15s;}
@@ -81,6 +93,13 @@
   .try .th{font-weight:700;color:var(--claude);font-size:14px;margin:0 0 4px;display:flex;align-items:center;gap:7px;}
   .try p{margin:4px 0;font-size:15px;color:var(--ink);}
   .try .mini{font-size:13.5px;color:var(--muted);margin-top:6px;}
+
+  /* info / caution callout */
+  .note{background:var(--info-soft);border:1px solid #cfe0f1;border-left:4px solid var(--info);
+    border-radius:10px;padding:14px 16px;margin:16px 0;}
+  .note .nh{font-weight:700;color:var(--info);font-size:14px;margin:0 0 4px;}
+  .note p,.note li{font-size:15px;margin:4px 0;}
+  .note ul{margin:4px 0;padding-left:20px;}
 
   /* reflection */
   .reflect{background:var(--panel);border:1px dashed #c9d0dd;border-radius:10px;padding:15px 17px;margin:16px 0;}
@@ -99,7 +118,11 @@
   .field label span{font-weight:400;color:var(--muted);font-size:13.5px;}
   .field textarea{width:100%;min-height:52px;border:1px solid var(--line);border-radius:8px;padding:10px;
     font-family:inherit;font-size:15px;resize:vertical;}
-  .field textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
+  .field textarea:focus,.reflect textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
+  .opts{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:4px 0 14px;background:var(--panel);}
+  .opts .ol{font-weight:700;font-size:14.5px;margin-bottom:6px;}
+  .opts label{display:flex;gap:9px;align-items:flex-start;font-size:14.5px;margin:6px 0;cursor:pointer;}
+  .opts input{margin-top:5px;accent-color:var(--accent);}
   .assembled{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;margin-top:6px;}
   .assembled .al{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:8px;}
   #assembledText{font-family:"SF Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14px;
@@ -109,16 +132,20 @@
   .btn-primary:hover{background:#4331bd;}
 
   ul.check{list-style:none;padding:0;margin:10px 0;}
-  ul.check li{padding:8px 0 8px 30px;position:relative;border-bottom:1px solid var(--line);font-size:15.5px;}
+  ul.check li{padding:8px 0 8px 30px;position:relative;border-bottom:1px solid var(--line);font-size:15.5px;cursor:pointer;}
   ul.check li:before{content:"";position:absolute;left:2px;top:12px;width:16px;height:16px;border:2px solid var(--accent);border-radius:4px;}
   ul.check li.on:before{background:var(--accent);}
-  ul.check li{cursor:pointer;}
 
   .modelrow{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0;}
   @media(max-width:640px){.modelrow{grid-template-columns:1fr;}}
   .mchip{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:#fff;}
   .mchip h4{margin:0 0 4px;font-size:15px;}
   .mchip p{margin:0;font-size:13.5px;color:var(--muted);}
+
+  table.frame{width:100%;border-collapse:collapse;margin:14px 0;font-size:15px;}
+  table.frame th,table.frame td{text-align:left;vertical-align:top;padding:9px 10px;border-bottom:1px solid var(--line);}
+  table.frame th{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);}
+  table.frame td:first-child{font-weight:700;white-space:nowrap;}
 
   footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:13.5px;}
   a{color:var(--accent);}
@@ -132,80 +159,100 @@
 
   <header class="hero">
     <p class="eyebrow">Faculty Development &middot; AI Literacy &middot; Module 1 Skill Lab</p>
-    <h1>Prompting Well: Communicating Clearly with AI</h1>
-    <p>A hands-on lab. You'll build prompts, compare weak and strong versions, and test your work in Claude &mdash; across models and effort levels &mdash; to see how clear communication shapes what you get back.</p>
+    <h1>Prompting Well: Describing What You Want</h1>
+    <p>A hands-on lab. Newer AI models &mdash; especially agentic tools that carry out multi-step work &mdash; need less clever wording and more clarity about <i>what you want, why, and what "good" looks like</i>. You'll practice describing that clearly, then test it in Claude.</p>
   </header>
 
   <div class="goals">
     <h2>What you'll practice</h2>
     <ul>
-      <li>Communicate a task to Claude the way you'd brief a capable colleague &mdash; using <b>Task, Context, Constraints, Output</b>.</li>
-      <li>Run the same prompt in different <b>models</b> (Sonnet 5, Opus 4.8) and <b>effort levels</b> (extended thinking on/off) and notice the difference.</li>
-      <li>Treat the first response as a <b>draft to steer</b> &mdash; direct and reshape it toward what you need.</li>
-      <li>Use Claude as a <b>thinking partner</b> &mdash; to critique, compare, and stress-test your own design.</li>
+      <li>Brief Claude the way you'd brief a capable colleague: the <b>goal and why</b>, the <b>context</b>, <b>what good looks like</b>, the <b>boundaries</b>, and the <b>output</b>.</li>
+      <li>Let Claude <b>interview you</b> when you're not yet sure how to describe what you want.</li>
+      <li>Treat the first response as a <b>draft to steer</b> &mdash; and ask for a <b>plan first</b> on bigger jobs.</li>
+      <li>Move from chatting to <b>delegating</b> a whole task, using a <b>Project</b> to hold your course context.</li>
+      <li>Use Claude as a <b>thinking partner</b>, and build a <b>verification habit</b> that lasts.</li>
     </ul>
+    <nav class="toc" aria-label="Lab sections">
+      <ol>
+        <li><a href="#p1">Start with the goal &mdash; and why</a></li>
+        <li><a href="#p2">Give it the context you already have</a></li>
+        <li><a href="#p3">Describe what good looks like</a></li>
+        <li><a href="#p4">Say what the output should be</a></li>
+        <li><a href="#p5">Let Claude interview you</a></li>
+        <li><a href="#builder">Build your own brief</a></li>
+        <li><a href="#p6">Steer &mdash; and check in on bigger jobs</a></li>
+        <li><a href="#p7">From chat to delegation</a></li>
+        <li><a href="#p8">Ask Claude to help you think</a></li>
+        <li><a href="#p9">Verification is a habit</a></li>
+      </ol>
+    </nav>
   </div>
 
   <div class="try" style="margin-top:20px;">
     <p class="th">Before you begin &mdash; open Claude in another tab</p>
-    <p>Go to <a href="https://claude.ai" target="_blank" rel="noopener">claude.ai</a> and keep it open beside this page. Throughout the lab you'll copy prompts from here and paste them there.</p>
-    <p><b>Run the whole lab in a private / incognito browser window.</b> That keeps every A/B comparison clean and your cohort's results comparable, because no saved memory or earlier chat can quietly influence a reply. (Memory is a variable <i>you</i> control &mdash; you'll work with it in the companion Claude Onboarding lab.)</p>
+    <p>Go to <a href="https://claude.ai" target="_blank" rel="noopener">claude.ai</a> and keep it open beside this page. You'll copy prompts from here and paste them there.</p>
+    <p><b>Run Principles 1&ndash;6 in an incognito chat.</b> (Use Claude's own incognito chat option, or a private browser window.) That keeps each comparison clean, because no saved memory or earlier chat quietly influences a reply. In Principle 7 you'll switch to a <b>Project</b>, where carrying context forward is the point.</p>
     <p>Watch for two controls in Claude's message box:</p>
     <div class="modelrow">
       <div class="mchip">
         <h4>Model selector</h4>
-        <p>Switch between <b>Sonnet 5</b> (fast, capable, great default) and <b>Opus 4.8</b> (deepest reasoning). Try the same prompt in each.</p>
+        <p><b><span class="m-fast">Sonnet 5</span></b> is your everyday default &mdash; fast and capable. <b><span class="m-deep">Opus 4.8</span></b> is for harder reasoning, like critique and ambiguous design problems.</p>
       </div>
       <div class="mchip">
-        <h4>Extended thinking / effort</h4>
-        <p>Toggle <b>extended thinking</b> on to let Claude reason more before answering. Compare a reply with it off vs. on.</p>
+        <h4>Thinking / effort</h4>
+        <p>Depending on your app version, this appears as an <b>extended thinking</b> toggle or an <b>effort</b> setting. More thinking = more reasoning before Claude answers.</p>
       </div>
     </div>
-    <p class="mini">Model names and controls update over time &mdash; use whichever current models and effort settings your account offers. The skill is the comparison, not the specific label.</p>
+    <p class="mini">Model names and controls change over time &mdash; use whatever your account offers. The skill is the comparison, not the label.</p>
   </div>
 
-  <!-- ============ PRINCIPLE 1: TASK ============ -->
-  <section class="step">
+  <div class="note">
+    <p class="nh">Mind your usage on the $20 Pro plan</p>
+    <p>Pro has usage limits that reset every few hours, plus a weekly cap. The deeper model with more thinking uses your allowance faster. This lab asks for a full model comparison <b>only once</b> (in the builder). Elsewhere, stick with <span class="m-fast">Sonnet 5</span> unless a step says otherwise.</p>
+  </div>
+
+  <!-- ============ PRINCIPLE 1: GOAL + WHY ============ -->
+  <section class="step" id="p1">
     <span class="kicker">Principle 1</span>
-    <h2>Start with the task</h2>
-    <p class="lead">The most common problem with a prompt isn't a broken formula &mdash; it's that the task was never defined. Tell Claude what you're actually trying to accomplish.</p>
+    <h2>Start with the goal &mdash; and why it matters</h2>
+    <p class="lead">The most common problem isn't wording &mdash; it's that the goal was never stated. And the single cheapest improvement is adding <b>why</b>. When Claude knows your reasoning, it makes better choices about everything you didn't spell out.</p>
 
     <div class="compare">
       <div class="card weak">
         <div class="tag">&#9888; Under-defined</div>
         <div class="prompt" id="p1a">Create a class activity about hypertension.</div>
-        <div class="whymiss">Claude has to guess: which students, which concept, five minutes or ninety?</div>
+        <div class="whymiss">Claude has to guess: which students, which concept, five minutes or ninety &mdash; and for what purpose?</div>
         <button class="copy" data-target="p1a">Copy prompt</button>
       </div>
       <div class="card strong">
-        <div class="tag">&#10003; Clear task</div>
-        <div class="prompt" id="p1b">Create a 20-minute small-group activity for second-year nursing students learning to recognize factors that contribute to poorly controlled hypertension.</div>
-        <div class="whyfix">Now Claude understands the work: who, what, and how long.</div>
+        <div class="tag">&#10003; Goal + why</div>
+        <div class="prompt" id="p1b">Create a 20-minute small-group activity for second-year nursing students on the factors that contribute to poorly controlled hypertension. The purpose: on last term's exam, students could list risk factors but couldn't explain how they interact in a real patient. I want them practicing that reasoning, not memorizing another list.</div>
+        <div class="whyfix">The "why" tells Claude to build for reasoning about interactions &mdash; a design decision you didn't have to spell out.</div>
         <button class="copy" data-target="p1b">Copy prompt</button>
       </div>
     </div>
 
     <div class="try">
       <p class="th">Try it in Claude</p>
-      <p>Paste <b>both</b> prompts (one at a time, new chat each) into <b>Sonnet 5</b>. Read the two responses side by side.</p>
-      <p class="mini">Which one would need less editing before you could use it? Notice how much of the "improvement" came from you defining the task, not from any special wording.</p>
-      <p style="margin-top:8px;"><b>Then steer it.</b> Don't stop at the first reply &mdash; send one follow-up:</p>
+      <p>Paste <b>both</b> prompts (one at a time, new chat each) into <span class="m-fast">Sonnet 5</span>. Read the two responses side by side.</p>
+      <p class="mini">Which would need less editing? Look for choices Claude made <i>because</i> of the "why" &mdash; you'll often see it shape the whole activity.</p>
+      <p style="margin-top:8px;"><b>Then steer it.</b> Send one follow-up:</p>
       <div class="prompt" id="p1c">Add a 3-minute debrief I can lead at the end, with two questions that surface why hypertension stays poorly controlled.</div>
       <button class="copy" data-target="p1c">Copy</button>
     </div>
 
     <div class="reflect">
       <p class="rh">Reflect</p>
-      <p>In one sentence, what is the <i>task</i> for an activity you actually need to build this term?</p>
-      <textarea placeholder="I want Claude to..."></textarea>
+      <p>In one or two sentences: what do you want to build this term, and <i>why</i> &mdash; what problem in student learning is it solving?</p>
+      <textarea data-label="Principle 1 — My goal and why" placeholder="I want Claude to... because my students..."></textarea>
     </div>
   </section>
 
   <!-- ============ PRINCIPLE 2: CONTEXT ============ -->
-  <section class="step">
+  <section class="step" id="p2">
     <span class="kicker">Principle 2</span>
     <h2>Give it the context you already have</h2>
-    <p class="lead">Claude doesn't know your course. It doesn't know what students learned last week, your terminology, or the rigor you expect &mdash; unless you tell it, or hand it your materials.</p>
+    <p class="lead">Claude doesn't know your course. It doesn't know who your students are, what they learned last week, or how they'll encounter the material &mdash; unless you tell it, or hand it your materials.</p>
 
     <div class="compare">
       <div class="card weak">
@@ -222,68 +269,95 @@
       </div>
     </div>
 
+    <p style="color:var(--ink);margin-top:22px;"><b>Same goal, different students.</b> Context doesn't just add detail &mdash; it changes the right answer. Here's one learning goal briefed for two very different settings:</p>
+    <div class="compare">
+      <div class="card alt">
+        <div class="tag">&#9679; In-person undergraduate</div>
+        <div class="prompt" id="p2e">I teach an in-person intro psychology course, mostly first-year students, 35 per section. Goal: students can tell correlation from causation in a news headline. They've had one lecture on it. Design a 15-minute in-class activity with a lot of structure &mdash; many haven't done group work in college yet. Include what I say to launch it and how I'll know, by the end, who got it.</div>
+        <div class="whyalt">Structure, live facilitation, and a quick in-room check for understanding.</div>
+        <button class="copy" data-target="p2e">Copy prompt</button>
+      </div>
+      <div class="card alt">
+        <div class="tag">&#9679; Online asynchronous graduate</div>
+        <div class="prompt" id="p2f">I teach an asynchronous online graduate research methods course; most students work full-time and log in at different times during the week. Goal: students can tell correlation from causation in published research claims. Design a week-long discussion activity that works without me present: an initial post, a structured peer reply, and a prompt that forces them to engage with a study from their own field.</div>
+        <div class="whyalt">No live facilitator, staggered participation, and professional relevance for adult learners.</div>
+        <button class="copy" data-target="p2f">Copy prompt</button>
+      </div>
+    </div>
+
     <div class="try">
-      <p class="th">Try it in Claude &mdash; and add your own materials</p>
-      <p>Run the strong prompt. Then start a new chat and <b>attach a real file</b> &mdash; a learning objective, a rubric, or an anonymized sample of student work &mdash; and ask Claude to work <i>from</i> it. For example:</p>
+      <p class="th">Try it in Claude &mdash; add your own materials, and an example</p>
+      <p>Start a new chat and <b>attach a real file</b> &mdash; a learning objective, a rubric, or case materials &mdash; and ask Claude to work <i>from</i> it:</p>
       <div class="prompt" id="p2c" style="margin-top:8px;">Here are the learning objectives and case materials for my unit. Identify where the current case requires clinical reasoning and where students could answer primarily through recall.</div>
       <button class="copy" data-target="p2c">Copy prompt</button>
-      <p class="mini">This is a very different use of AI than "make my assignment better." You've supplied the intellectual environment Claude should work in.</p>
-      <p style="margin-top:8px;"><b>Then steer it.</b> Send one follow-up to tighten it:</p>
-      <div class="prompt" id="p2d">Revise the question so it can't be answered by restating the definition of UDL &mdash; force students to apply it to a specific classroom problem.</div>
-      <button class="copy" data-target="p2d">Copy</button>
+      <p style="margin-top:10px;"><b>Show, don't just tell.</b> If you have something you already like, attach it as a model. An example often communicates your standard better than a paragraph of description:</p>
+      <div class="prompt" id="p2g" style="margin-top:8px;">Attached is a discussion question from Module 3 that worked well &mdash; students had to take a position and defend it with the reading. Write one for Module 5 (topic: health literacy) that matches that level of rigor and structure. Don't copy its content.</div>
+      <button class="copy" data-target="p2g">Copy prompt</button>
+    </div>
+
+    <div class="note">
+      <p class="nh">Before you attach student work &mdash; privacy and FERPA</p>
+      <ul>
+        <li>Remove <b>every</b> identifier, not just names: IDs, emails, dates, locations, and details a classmate would recognize.</li>
+        <li>Pro is a consumer plan. Open Claude's <b>Settings &rarr; Privacy</b> and review the data settings, including whether your chats may be used to improve models.</li>
+        <li>Follow your institution's AI and data-use policy. When in doubt, write a realistic <i>composite</i> sample instead.</li>
+      </ul>
     </div>
 
     <div class="reflect">
       <p class="rh">Self-check</p>
       <p>Claude gives you a flat, generic response. Before you rewrite your prompt, what's the first thing to check?</p>
       <details class="answer"><summary>Show a good answer</summary>
-        <div class="body">Whether you gave it enough context. Generic in, generic out. Name the course, the level, what students already know, and the rigor you expect &mdash; or attach the materials that carry that context for you.</div>
+        <div class="body">Whether you gave it enough context. Generic in, generic out. Name the course, the level, the modality (in-person or asynchronous), what students already know, and the rigor you expect &mdash; or attach materials and an example that carry that context for you.</div>
       </details>
     </div>
   </section>
 
-  <!-- ============ PRINCIPLE 3: CONSTRAINTS ============ -->
-  <section class="step">
+  <!-- ============ PRINCIPLE 3: WHAT GOOD LOOKS LIKE ============ -->
+  <section class="step" id="p3">
     <span class="kicker">Principle 3</span>
-    <h2>Identify the constraints</h2>
-    <p class="lead">Constraints tell Claude what boundaries matter &mdash; and they're where your pedagogical decisions live. Claude doesn't make those calls; you do.</p>
+    <h2>Describe what good looks like &mdash; and the boundaries</h2>
+    <p class="lead">Tell Claude how <i>you</i> will judge the result. Success criteria and boundaries are where your pedagogical decisions live. Claude doesn't make those calls; you do.</p>
 
     <div class="compare">
       <div class="card weak">
-        <div class="tag">&#9888; No boundaries</div>
+        <div class="tag">&#9888; No criteria</div>
         <div class="prompt" id="p3a">Create a classroom activity comparing two interpretations of Frankenstein.</div>
         <div class="whymiss">Claude picks the time, format, and even the goal for you.</div>
         <button class="copy" data-target="p3a">Copy prompt</button>
       </div>
       <div class="card strong">
-        <div class="tag">&#10003; Boundaries that carry your design</div>
-        <div class="prompt" id="p3b">Create a classroom activity comparing two interpretations of Frankenstein. I have 25 minutes; students work in groups of four. They've read the novel but no literary criticism yet. No lecture or worksheet. The activity should require students to cite passages from the text and end in disagreement between plausible interpretations rather than one correct answer.</div>
-        <div class="whyfix">Every constraint encodes a teaching choice you made.</div>
+        <div class="tag">&#10003; Success criteria + boundaries</div>
+        <div class="prompt" id="p3b">Create a classroom activity comparing two interpretations of Frankenstein for undergraduate English majors. I have 25 minutes; students work in groups of four. They've read the novel but no literary criticism yet.
+
+It succeeds if: every group cites specific passages, and the class ends in real disagreement between two plausible readings rather than one correct answer.
+
+Boundaries: no lecture, no worksheet.</div>
+        <div class="whyfix">Claude can now check its own draft against the criteria you'll use.</div>
         <button class="copy" data-target="p3b">Copy prompt</button>
       </div>
     </div>
 
     <div class="try">
-      <p class="th">Try it in Claude &mdash; then compare models</p>
-      <p>Run the strong prompt in <b>Sonnet 5</b>. Then run the exact same prompt in <b>Opus 4.8</b>.</p>
-      <p class="mini">Where do they differ? A task with genuine intellectual tension (like "end in disagreement") is a good place to feel what the deeper-reasoning model adds &mdash; and whether it's worth it for this task.</p>
-      <p style="margin-top:8px;"><b>Then steer it.</b> Push on the result you got:</p>
+      <p class="th">Try it in Claude &mdash; then steer it</p>
+      <p>Run the strong prompt in <span class="m-fast">Sonnet 5</span>. Read it against your own success criteria &mdash; would it pass?</p>
+      <p style="margin-top:8px;"><b>Then push on the result:</b></p>
       <div class="prompt" id="p3c">Keep the disagreement, but make the two interpretations closer so the choice is genuinely hard rather than obvious.</div>
       <button class="copy" data-target="p3c">Copy</button>
     </div>
 
     <div class="reflect">
       <p class="rh">Reflect</p>
-      <p>Constraints can cover time, student level, technology, accessibility, disciplinary standards, class size, assessment format &mdash; or what you specifically <i>don't</i> want. Name one constraint you'd add to keep students from taking a shortcut.</p>
-      <textarea placeholder="Do not..."></textarea>
+      <p>Finish this sentence for your own activity: "It succeeds if students..." Then name one boundary that keeps them from taking a shortcut.</p>
+      <textarea data-label="Principle 3 — What good looks like" placeholder="It succeeds if students... / Do not..."></textarea>
     </div>
   </section>
 
   <!-- ============ PRINCIPLE 4: OUTPUT ============ -->
-  <section class="step">
+  <section class="step" id="p4">
     <span class="kicker">Principle 4</span>
-    <h2>Say what a useful output looks like</h2>
-    <p class="lead">A response can be completely accurate and completely useless if it's the wrong shape. Describe the product you need &mdash; it saves editing and forces you to decide what you actually want.</p>
+    <h2>Say what the output should be &mdash; and where it's going</h2>
+    <p class="lead">A response can be accurate and still useless if it's the wrong shape. Describe the product you need and its destination &mdash; a Canvas page, a slide, a handout &mdash; and the student-facing requirements that come with it.</p>
 
     <div class="compare">
       <div class="card weak">
@@ -301,44 +375,100 @@
     </div>
 
     <div class="try">
-      <p class="th">Try it in Claude &mdash; then steer it</p>
+      <p class="th">Try it in Claude &mdash; then reshape only the output</p>
       <p>Run the strong prompt. Then send one follow-up that changes only the <i>output</i>:</p>
       <div class="prompt" id="p4c">Put that into a table with four columns: scenario, common novice interpretation, more sophisticated interpretation, and a question that moves the student forward.</div>
       <button class="copy" data-target="p4c">Copy</button>
-      <p class="mini">Notice you didn't restate the whole task &mdash; you just reshaped the output. Shaping the response is the portable move: it works the same in chat today and when you're directing an agentic tool later.</p>
+      <p class="mini">You didn't restate the task &mdash; you just reshaped the product.</p>
     </div>
+
+    <p style="color:var(--muted);">Student-facing requirements worth naming in the output: <b>reading level</b>, <b>length</b>, <b>accessibility</b> (headings, plain language, alt text for images, no meaning carried by color alone), and <b>paste-ready formatting</b> for your LMS.</p>
 
     <div class="reflect">
       <p class="rh">Self-check &mdash; match the output to the setting</p>
       <p>Your course is asynchronous in Canvas, not a live lecture. How might you describe the output differently?</p>
       <details class="answer"><summary>Show one good answer</summary>
-        <div class="body">Ask for student-facing text you can reveal in stages, with a <i>separate</i> instructor key. E.g., "Create three progressive versions of this case I can reveal sequentially in Canvas. Give the student-facing case text first, then a separate instructor key identifying the reasoning expected at each stage."</div>
+        <div class="body">Ask for student-facing text you can reveal in stages, with a <i>separate</i> instructor key. E.g., "Create three progressive versions of this case I can release one at a time as Canvas pages. Give the student-facing text first, written for graduate learners, with clear headings. Then a separate instructor key identifying the reasoning expected at each stage."</div>
       </details>
     </div>
   </section>
 
+  <!-- ============ PRINCIPLE 5: INTERVIEW ============ -->
+  <section class="step" id="p5">
+    <span class="kicker new">Principle 5 &middot; New</span>
+    <h2>Not sure how to describe it? Let Claude interview you</h2>
+    <p class="lead">Describing clearly what you want is the core skill &mdash; and it's hard to do cold. You don't have to. Ask Claude to draw it out of you before it starts. This is often the fastest route to a good brief, and it models the kind of questioning you'd want from a good collaborator.</p>
+
+    <div class="compare">
+      <div class="card weak">
+        <div class="tag">&#9888; Guess and revise</div>
+        <div class="prompt" id="p5x">Make me a rubric for my capstone paper.</div>
+        <div class="whymiss">Claude invents criteria; you spend three rounds correcting them.</div>
+        <button class="copy" data-target="p5x">Copy prompt</button>
+      </div>
+      <div class="card strong">
+        <div class="tag">&#10003; Interview first</div>
+        <div class="prompt" id="p5y">I need a rubric for my capstone paper. Before you draft anything, ask me up to five questions about my students, the assignment's goals, and what separates strong from weak work in my field. Ask them one at a time and wait for my answers.</div>
+        <div class="whyfix">Your answers become the brief. You describe what you want by responding, not by composing.</div>
+        <button class="copy" data-target="p5y">Copy prompt</button>
+      </div>
+    </div>
+
+    <div class="try">
+      <p class="th">Try it in Claude</p>
+      <p>Run the "interview first" prompt with a real assignment of yours. Answer the questions honestly &mdash; "I'm not sure" is a useful answer too.</p>
+      <p class="mini">Notice which questions you hadn't thought to answer. Those gaps are exactly what your earlier prompts were missing.</p>
+    </div>
+  </section>
+
   <!-- ============ BUILDER ============ -->
-  <section class="step">
+  <section class="step" id="builder">
     <span class="kicker">Put it together</span>
-    <h2>Build your own prompt</h2>
-    <p class="lead">You don't need four headings every time &mdash; they're a mental checklist. Fill in what applies, and copy the assembled prompt into Claude. Leave a box blank if it isn't relevant.</p>
+    <h2>Build your own brief</h2>
+    <p class="lead">You don't need every heading every time &mdash; it's a mental checklist. Fill in what applies, leave the rest blank, and copy the assembled prompt into Claude.</p>
+
+    <table class="frame">
+      <thead><tr><th>Part</th><th>The question it answers</th></tr></thead>
+      <tbody>
+        <tr><td>Goal &amp; why</td><td>What do I want, and what problem is it solving?</td></tr>
+        <tr><td>Context</td><td>Who are the students, how do they meet the material, and what do they already know?</td></tr>
+        <tr><td>What good looks like</td><td>How will I judge whether this worked?</td></tr>
+        <tr><td>Boundaries</td><td>What must it avoid, or never do?</td></tr>
+        <tr><td>Output</td><td>What shape, and where is it going?</td></tr>
+      </tbody>
+    </table>
 
     <div class="builder">
       <div class="field">
-        <label>Task <span>&mdash; what do you want Claude to do?</span></label>
-        <textarea id="bTask" placeholder="Create a short case for first-semester graduate students learning to distinguish complementary approaches, whole medical systems, and conventional care."></textarea>
+        <label for="bGoal">Goal <span>&mdash; what do you want Claude to do?</span></label>
+        <textarea id="bGoal" placeholder="Create a short case for first-semester graduate students learning to distinguish complementary approaches, whole medical systems, and conventional care."></textarea>
       </div>
       <div class="field">
-        <label>Context <span>&mdash; what does Claude need to know about your course?</span></label>
-        <textarea id="bContext" placeholder="This is an asynchronous introductory integrative-health course. Students have covered the three categories but not yet applied them."></textarea>
+        <label for="bWhy">Why <span>&mdash; what problem does this solve for your students?</span></label>
+        <textarea id="bWhy" placeholder="Students can define the three categories but sort real examples inconsistently. I want them reasoning about the boundaries, not memorizing definitions."></textarea>
       </div>
       <div class="field">
-        <label>Constraints <span>&mdash; what boundaries matter? what do you NOT want?</span></label>
-        <textarea id="bConstraints" placeholder="Make the categories genuinely hard to distinguish. Avoid obvious examples where the answer is immediately apparent."></textarea>
+        <label for="bContext">Context <span>&mdash; level, modality (in-person / async), what they already know</span></label>
+        <textarea id="bContext" placeholder="This is an asynchronous online introductory integrative-health course. Students have covered the three categories but not yet applied them."></textarea>
       </div>
       <div class="field">
-        <label>Output <span>&mdash; what should the response look like?</span></label>
-        <textarea id="bOutput" placeholder="Give the student-facing case first, then three discussion questions that require explanation rather than simple classification."></textarea>
+        <label for="bGood">What good looks like <span>&mdash; how will you judge the result?</span></label>
+        <textarea id="bGood" placeholder="It succeeds if thoughtful students could reasonably disagree about the category, and have to justify their choice."></textarea>
+      </div>
+      <div class="field">
+        <label for="bBounds">Boundaries <span>&mdash; what should it avoid?</span></label>
+        <textarea id="bBounds" placeholder="Avoid obvious examples where the answer is immediately apparent. Don't use brand-name products."></textarea>
+      </div>
+      <div class="field">
+        <label for="bOutput">Output <span>&mdash; shape and destination</span></label>
+        <textarea id="bOutput" placeholder="Give the student-facing case first, ready to paste into a Canvas discussion, then three questions that require explanation rather than simple classification."></textarea>
+      </div>
+
+      <div class="opts">
+        <div class="ol">Optional add-ons</div>
+        <label><input type="checkbox" id="oAsk"> <span><b>Interview me first</b> &mdash; Claude asks questions before drafting</span></label>
+        <label><input type="checkbox" id="oPlan"> <span><b>Show me a plan first</b> &mdash; useful for bigger jobs</span></label>
+        <label><input type="checkbox" id="oUnsure"> <span><b>Flag uncertainty</b> &mdash; say "I'm not sure" instead of guessing</span></label>
       </div>
 
       <div class="assembled">
@@ -347,134 +477,207 @@
       </div>
       <div class="builder-actions">
         <button class="btn-primary" id="copyAssembled">Copy assembled prompt</button>
-        <button class="copy" id="clearBuilder">Clear all</button>
+        <button class="copy" id="clearBuilder" style="margin-top:0;">Clear all</button>
       </div>
     </div>
 
     <div class="try">
-      <p class="th">Run your prompt &mdash; the full experiment</p>
-      <p>Take your assembled prompt into Claude and run it <b>four ways</b>, then compare:</p>
+      <p class="th">Run your prompt &mdash; the one full comparison in this lab</p>
+      <p>Take your assembled prompt into Claude and run it <b>up to four ways</b>, then compare. (If you're watching your usage, run just the first and last.)</p>
       <div class="modelrow" style="margin-bottom:6px;">
-        <div class="mchip"><h4>Sonnet 5 &mdash; thinking off</h4><p>Fast baseline.</p></div>
-        <div class="mchip"><h4>Sonnet 5 &mdash; thinking on</h4><p>Same model, more reasoning.</p></div>
-        <div class="mchip"><h4>Opus 4.8 &mdash; thinking off</h4><p>Deeper model, quick.</p></div>
-        <div class="mchip"><h4>Opus 4.8 &mdash; thinking on</h4><p>Deepest reasoning.</p></div>
+        <div class="mchip"><h4><span class="m-fast">Sonnet 5</span> &mdash; less thinking</h4><p>Fast baseline.</p></div>
+        <div class="mchip"><h4><span class="m-fast">Sonnet 5</span> &mdash; more thinking</h4><p>Same model, more reasoning.</p></div>
+        <div class="mchip"><h4><span class="m-deep">Opus 4.8</span> &mdash; less thinking</h4><p>Deeper model, quick.</p></div>
+        <div class="mchip"><h4><span class="m-deep">Opus 4.8</span> &mdash; more thinking</h4><p>Deepest reasoning; heaviest on usage.</p></div>
       </div>
-      <p class="mini">For a simple task the differences may be small &mdash; that's a useful finding too. Save the deeper model and extended thinking for tasks with real ambiguity or many moving constraints.</p>
+      <p class="mini">For a simple task the differences may be small &mdash; that's a useful finding. Save the deeper model and more thinking for tasks with real ambiguity or many moving parts.</p>
     </div>
 
     <div class="reflect">
       <p class="rh">Reflect</p>
-      <p>Which of the four runs gave you the most usable result for your task &mdash; and was the extra effort worth it?</p>
-      <textarea placeholder="I found that..."></textarea>
+      <p>Which run gave you the most usable result &mdash; and was the extra effort (and usage) worth it for this task?</p>
+      <textarea data-label="Builder — Model comparison" placeholder="I found that..."></textarea>
     </div>
   </section>
 
-  <!-- ============ ITERATION ============ -->
-  <section class="step">
-    <span class="kicker">Principle 5</span>
-    <h2>Steer the response &mdash; don't perfect the prompt</h2>
-    <p class="lead">A prompt doesn't have to contain everything. Give Claude enough to begin, then steer, direct, and reshape what comes back. Don't spend twenty minutes crafting a "perfect" prompt. Shaping the output is the skill that transfers &mdash; it works the same in a chat today and in agentic tools that don't have a chat window at all.</p>
+  <!-- ============ PRINCIPLE 6: STEER ============ -->
+  <section class="step" id="p6">
+    <span class="kicker">Principle 6</span>
+    <h2>Steer the response &mdash; and check in before bigger jobs</h2>
+    <p class="lead">For quick requests, don't spend twenty minutes perfecting a prompt. Give Claude enough to begin, then steer. But the longer and more autonomous the task, the more your up-front description matters &mdash; an agent may take many steps before you see anything. So for bigger jobs, <b>ask for a plan first</b>.</p>
 
     <div class="try">
-      <p class="th">Try steering a result in Claude</p>
+      <p class="th">Quick work: steer in small turns</p>
       <p>Start with any case Claude gave you above, then send these <i>in sequence</i>, one message at a time:</p>
-      <div class="prompt" id="p5a" style="margin-top:8px;">Make the clinical ambiguity greater.</div>
-      <button class="copy" data-target="p5a">Copy</button>
-      <div class="prompt" id="p5b" style="margin-top:10px;">The ambiguity is better, but this presentation is clinically unlikely. Preserve the ambiguity while making the case realistic for outpatient primary care.</div>
-      <button class="copy" data-target="p5b">Copy</button>
-      <div class="prompt" id="p5c" style="margin-top:10px;">Good. Now remove the diagnostic label so students have to infer it.</div>
-      <button class="copy" data-target="p5c">Copy</button>
-      <p class="mini">Each turn shapes the result a little more. Steering beats one giant prompt.</p>
+      <div class="prompt" id="p6a" style="margin-top:8px;">Make the clinical ambiguity greater.</div>
+      <button class="copy" data-target="p6a">Copy</button>
+      <div class="prompt" id="p6b" style="margin-top:10px;">The ambiguity is better, but this presentation is clinically unlikely. Preserve the ambiguity while making the case realistic for outpatient primary care.</div>
+      <button class="copy" data-target="p6b">Copy</button>
+      <div class="prompt" id="p6c" style="margin-top:10px;">Good. Now remove the diagnostic label so students have to infer it.</div>
+      <button class="copy" data-target="p6c">Copy</button>
+      <p class="mini">Each turn shapes the result a little more. For short tasks, steering beats one giant prompt.</p>
+    </div>
+
+    <div class="try">
+      <p class="th">Bigger work: build in a checkpoint</p>
+      <p>Add a line like this to any multi-part request (a full module, a set of cases, a revised syllabus section):</p>
+      <div class="prompt" id="p6d" style="margin-top:8px;">Before you build anything, show me a short plan: what you'll create, in what order, and any assumptions you're making about my students. Wait for my go-ahead.</div>
+      <button class="copy" data-target="p6d">Copy</button>
+      <p class="mini">Correcting a plan takes one message. Correcting a finished module takes many.</p>
     </div>
   </section>
 
-  <!-- ============ THINKING PARTNER ============ -->
-  <section class="step">
-    <span class="kicker">Principle 6</span>
+  <!-- ============ PRINCIPLE 7: DELEGATION ============ -->
+  <section class="step" id="p7">
+    <span class="kicker new">Principle 7 &middot; New</span>
+    <h2>From chat to delegation</h2>
+    <p class="lead">Agentic tools don't just answer &mdash; they carry out a job: reading your files, drafting several pieces, checking their own work, and handing back a finished product. Delegating well uses everything above, plus three things chat rarely needs: <b>a clear deliverable</b>, <b>a self-check</b>, and <b>instructions for when to stop and flag a problem</b>.</p>
+
+    <div class="compare">
+      <div class="card weak">
+        <div class="tag">&#9888; A request</div>
+        <div class="prompt" id="p7x">Write my Week 4 overview page.</div>
+        <div class="whymiss">No sources, no audience, no finish line.</div>
+        <button class="copy" data-target="p7x">Copy prompt</button>
+      </div>
+      <div class="card strong">
+        <div class="tag">&#10003; A delegation brief</div>
+        <div class="prompt" id="p7y">Build a Canvas-ready overview page for Week 4 using the attached syllabus and readings.
+
+Audience: asynchronous online graduate students, mostly working professionals.
+Done looks like: under 400 words; states the week's two learning objectives in plain language; tells students what to do and in what order; ends with one reflection prompt tied to the objectives.
+Requirements: accessible headings, no meaning carried by color alone, paste-ready for Canvas.
+
+Before you hand it back, check it against the learning objectives and list anything you couldn't verify from the attached files. If the readings and syllabus conflict, stop and ask me.</div>
+        <div class="whyfix">Deliverable, audience, finish line, self-check, and when to ask.</div>
+        <button class="copy" data-target="p7y">Copy prompt</button>
+      </div>
+    </div>
+
+    <div class="try">
+      <p class="th">Set up a Project &mdash; context you give once</p>
+      <p>On Pro, a <b>Project</b> holds files and instructions that every chat inside it can use. It's the practical version of "context engineering": instead of re-explaining your course each time, you curate it once.</p>
+      <p><b>1.</b> In Claude, create a Project named for one real course.</p>
+      <p><b>2.</b> Add your syllabus, learning objectives, one rubric, and one example of work you consider strong (de-identified).</p>
+      <p><b>3.</b> In the Project's instructions, describe your students and your standards in a few sentences, for example:</p>
+      <div class="prompt" id="p7z" style="margin-top:8px;">These are asynchronous online graduate students in integrative health, most working full-time. Write student-facing material in plain, warm, professional language at a graduate level. Prioritize applying ideas over recalling them. Flag any factual claim you aren't confident about.</div>
+      <button class="copy" data-target="p7z">Copy</button>
+      <p><b>4.</b> Run the delegation brief above inside the Project, with less context in the prompt itself. Compare the result to your incognito runs.</p>
+      <p class="mini">A few well-chosen files beat a folder dump. Curate what Claude should use, and remove anything outdated.</p>
+    </div>
+
+    <div class="reflect">
+      <p class="rh">Reflect</p>
+      <p>What's one recurring task you could delegate this way? What would "done" look like, and when should Claude stop and ask you?</p>
+      <textarea data-label="Principle 7 — A task to delegate" placeholder="I could delegate... Done means... Stop and ask me if..."></textarea>
+    </div>
+  </section>
+
+  <!-- ============ PRINCIPLE 8: THINKING PARTNER ============ -->
+  <section class="step" id="p8">
+    <span class="kicker">Principle 8</span>
     <h2>Ask Claude to help you think, not just produce</h2>
-    <p class="lead">As models get stronger, one of the most valuable moves is asking Claude to critique your thinking rather than generate a product. Use it as a critic, simulator, or alternative perspective.</p>
+    <p class="lead">One of the most valuable moves is asking Claude to critique your thinking rather than generate a product. You don't need elaborate role-play &mdash; what matters is the <i>stance</i> you ask for: skeptical, specific, and holding off on rewriting.</p>
 
     <div class="compare">
       <div class="card weak">
         <div class="tag">&#9888; Produce only</div>
-        <div class="prompt" id="p6a">Improve this assignment.</div>
-        <button class="copy" data-target="p6a">Copy prompt</button>
+        <div class="prompt" id="p8a">Improve this assignment.</div>
+        <button class="copy" data-target="p8a">Copy prompt</button>
       </div>
       <div class="card strong">
         <div class="tag">&#10003; Think with you</div>
-        <div class="prompt" id="p6b">Read this assignment as a skeptical instructional designer. Identify three assumptions I appear to be making about what students already know. Do not rewrite anything yet.</div>
-        <button class="copy" data-target="p6b">Copy prompt</button>
+        <div class="prompt" id="p8b">Read this assignment skeptically, the way an experienced instructional designer would. Identify three assumptions I appear to be making about what students already know. Do not rewrite anything yet.</div>
+        <button class="copy" data-target="p8b">Copy prompt</button>
       </div>
     </div>
 
     <p style="color:var(--muted);margin-top:4px;">More moves worth trying &mdash; copy any into Claude with your own materials attached:</p>
-    <div class="prompt" id="p6c">Examine this case as an experienced educator in my field. Where could a student reach the correct answer using superficial pattern recognition rather than real reasoning?</div>
-    <button class="copy" data-target="p6c">Copy</button>
-    <div class="prompt" id="p6d" style="margin-top:10px;">I think this assignment assesses synthesis. Challenge that assumption. Give evidence for and against my interpretation.</div>
-    <button class="copy" data-target="p6d">Copy</button>
+    <div class="prompt" id="p8c">Where could a student reach the correct answer in this case using superficial pattern recognition rather than real reasoning?</div>
+    <button class="copy" data-target="p8c">Copy</button>
+    <div class="prompt" id="p8d" style="margin-top:10px;">I think this assignment assesses synthesis. Challenge that assumption. Give evidence for and against my interpretation.</div>
+    <button class="copy" data-target="p8d">Copy</button>
+    <div class="prompt" id="p8e" style="margin-top:10px;">Read this prompt as a first-year undergraduate would, then as a working professional in an online graduate program. Where would each get confused or take a shortcut?</div>
+    <button class="copy" data-target="p8e">Copy</button>
 
     <div class="try">
       <p class="th">Where the deeper model earns its keep</p>
-      <p>Critique and "challenge my assumptions" tasks are exactly where <b>Opus 4.8 with extended thinking</b> tends to shine. Run one of the prompts above in Sonnet 5, then in Opus 4.8 with thinking on, and compare how each pushes back.</p>
+      <p>Critique and "challenge my assumptions" tasks are where <span class="m-deep">Opus 4.8</span> with more thinking tends to shine. If you have usage to spare, run one prompt above in both models and compare how each pushes back.</p>
     </div>
 
     <div class="reflect">
       <p class="rh">Reflect</p>
       <p>Write one prompt that asks Claude to <i>critique</i> something you're designing &mdash; without rewriting it.</p>
-      <textarea placeholder="Read this as... and identify..."></textarea>
+      <textarea data-label="Principle 8 — My critique prompt" placeholder="Read this skeptically and identify..."></textarea>
     </div>
   </section>
 
-  <!-- ============ EXPERTISE ============ -->
-  <section class="step">
-    <span class="kicker">Principle 7</span>
+  <!-- ============ PRINCIPLE 9: VERIFICATION ============ -->
+  <section class="step" id="p9">
+    <span class="kicker">Principle 9</span>
     <h2>Verification is a habit that decays &mdash; build it now</h2>
     <p class="lead">Better prompting doesn't remove Claude's limits. A polished response can still be wrong, and plausible errors are the hard ones to catch. Your judgment moves upstream: you define the problem, supply the disciplinary context, and decide what belongs in your teaching.</p>
 
-    <p>Here is the trap, and it's well documented: once responses keep passing your checks, you stop running them. Verification lapses <i>precisely because</i> the model looks reliable. If you let that happen here, you carry a <b>miscalibrated</b> sense of AI accuracy into agentic tools later &mdash; where output arrives faster than you can read it and a single unchecked error compounds downstream. This is not a "later module" skill. Building the habit now is what keeps the next rungs of the ladder reachable.</p>
+    <p>Here is the trap, and it's well documented: once responses keep passing your checks, you stop running them. Verification lapses <i>precisely because</i> the model looks reliable. If you let that happen here, you carry a <b>miscalibrated</b> sense of AI accuracy into agentic tools &mdash; where output arrives faster than you can read it and a single unchecked error compounds downstream.</p>
 
-    <p style="color:var(--muted);">Start with the check that matters most to you &mdash; for most people, at first, that's <b>hallucinated facts and citations</b>. Tap each item as you verify the last response you got:</p>
+    <p style="color:var(--muted);"><b>Make errors easier to spot.</b> Tell Claude up front that uncertainty is welcome: <i>"If you're not sure about a fact or can't verify a source, say so rather than guessing."</i> A model that is allowed to say "I don't know" is easier to trust &mdash; and to check.</p>
+
+    <p style="color:var(--muted);">Start with the check that matters most to you &mdash; for most people, at first, that's <b>made-up ("hallucinated") facts and citations</b>. Tap each item as you verify the last response you got:</p>
     <ul class="check" id="verifyList">
       <li>Every factual claim and citation is verified against a real source &mdash; not just plausible-sounding.</li>
       <li>Any clinical, technical, or procedural detail is realistic and correct.</li>
       <li>Disagreement among experts or scholars hasn't been flattened into one view.</li>
       <li>Cultural or disciplinary context hasn't been stripped away.</li>
       <li>The activity actually assesses the learning objective &mdash; not just something engaging.</li>
+      <li>It is accessible and appropriate for <i>these</i> students (level, modality, reading load).</li>
     </ul>
 
     <div class="try">
       <p class="th">Make it a practice, not a one-time check</p>
-      <p>Three moves that hold up as the work gets more automated:</p>
       <p><b>1. Keep a short personal checklist</b> of what must be true in your field, and run it <i>by hand every time</i> &mdash; even when you're sure it will pass.</p>
       <p><b>2. Expect it to stop feeling necessary.</b> When checking starts to feel like a formality, that's the decay &mdash; not proof the model is safe. Catching yourself in that slip <i>is</i> the skill.</p>
-      <p><b>3. Re-check adversarially.</b> Paste your checklist into a <i>fresh</i> chat and ask Claude to argue against its own draft &mdash; always before anything reaches students:</p>
-      <div class="prompt" id="p7a">You are a skeptical fact-checker. Here is a draft I plan to give students. List every factual or citation claim you cannot verify, and every place a specialist might disagree. Do not rewrite it &mdash; only find problems.</div>
-      <button class="copy" data-target="p7a">Copy</button>
+      <p><b>3. Re-check adversarially.</b> Paste your draft into a <i>fresh</i> chat and ask Claude to find problems &mdash; always before anything reaches students:</p>
+      <div class="prompt" id="p9a">You are a skeptical fact-checker. Here is a draft I plan to give students. List every factual or citation claim you cannot verify, and every place a specialist might disagree. Do not rewrite it &mdash; only find problems.</div>
+      <button class="copy" data-target="p9a">Copy</button>
     </div>
 
     <div class="reflect">
       <p class="rh">Closing reflection &mdash; write your checklist</p>
-      <p>Name the two or three checks that must pass before anything you make with AI reaches your students. This is your personal checklist &mdash; keep it, and expect to have to remind yourself to run it.</p>
-      <textarea placeholder="Before it reaches students, I will verify..."></textarea>
+      <p>Name the two or three checks that must pass before anything you make with AI reaches your students. Keep it &mdash; and expect to have to remind yourself to run it.</p>
+      <textarea data-label="Principle 9 — My verification checklist" placeholder="Before it reaches students, I will verify..."></textarea>
     </div>
   </section>
 
   <section class="step">
     <span class="kicker">Takeaway</span>
-    <h2>You don't need a secret language</h2>
-    <p class="lead">Explain the work as you would to a capable collaborator who knows a great deal about the world but very little about your particular course. Give it the <b>task</b>, the <b>context</b>, the <b>constraints</b>, and the <b>output</b> you need. Then inspect what it gives you and steer it &mdash; asking it to critique, compare, challenge, and analyze, not just generate.</p>
+    <h2>You don't need a secret language &mdash; you need to know what you want</h2>
+    <p class="lead">Brief Claude as you would a capable colleague who knows a great deal about the world but nothing about your course: the <b>goal and why</b>, the <b>context</b>, <b>what good looks like</b>, the <b>boundaries</b>, and the <b>output</b>. If you can't articulate it yet, let Claude interview you. Ask for a plan on bigger jobs. Then inspect what comes back and steer it &mdash; and never skip the check before it reaches students.</p>
+
+    <div class="reflect">
+      <p class="rh">Keep your work</p>
+      <p>Nothing you type on this page is saved. Copy all of your reflections at once and paste them into your own notes &mdash; or into your course Project.</p>
+      <div class="builder-actions">
+        <button class="btn-primary" id="copyReflections">Copy all my reflections</button>
+      </div>
+    </div>
   </section>
 
   <footer>
-    <p>Module 1 Skill Lab &middot; AI Literacy for Faculty. Nothing you type here is saved or transmitted &mdash; use the copy buttons to move prompts into Claude, and keep your own notes. Guidance adapted from Anthropic's recommendations for working with Claude, including iterating on responses and treating first drafts as starting points.</p>
+    <p>Module 1 Skill Lab &middot; AI Literacy for Faculty. Nothing you type here is saved or transmitted &mdash; use the copy buttons to move prompts into Claude, and keep your own notes. Guidance adapted from Anthropic's recommendations for working with Claude, including <a href="https://claude.com/blog/best-practices-for-prompt-engineering" target="_blank" rel="noopener">prompt engineering best practices</a> and <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener">context engineering for AI agents</a>.</p>
+    <p>Last reviewed: September 2026.</p>
   </footer>
 </div>
 
-<div class="toast" id="toast">Copied to clipboard</div>
+<div class="toast" id="toast" role="status" aria-live="polite">Copied to clipboard</div>
 
 <script>
+/* ---- Update model names here when they change ---- */
+var MODELS = { fast: 'Sonnet 5', deep: 'Opus 4.8' };
+
 (function(){
+  document.querySelectorAll('.m-fast').forEach(function(el){ el.textContent = MODELS.fast; });
+  document.querySelectorAll('.m-deep').forEach(function(el){ el.textContent = MODELS.deep; });
+
   var toast = document.getElementById('toast');
   function showToast(msg){
     toast.textContent = msg || 'Copied to clipboard';
@@ -482,21 +685,21 @@
     clearTimeout(toast._t);
     toast._t = setTimeout(function(){ toast.classList.remove('show'); }, 1600);
   }
-  function copyText(text, btn){
+  function fallback(text){
+    var ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    try{ document.execCommand('copy'); }catch(e){}
+    document.body.removeChild(ta);
+  }
+  function copyText(text, btn, msg){
     function ok(){
-      showToast('Copied to clipboard');
+      showToast(msg || 'Copied to clipboard');
       if(btn){ var o=btn.textContent; btn.textContent='Copied ✓'; btn.classList.add('done');
         setTimeout(function(){ btn.textContent=o; btn.classList.remove('done'); },1400); }
     }
     if(navigator.clipboard && navigator.clipboard.writeText){
       navigator.clipboard.writeText(text).then(ok).catch(function(){ fallback(text); ok(); });
     } else { fallback(text); ok(); }
-  }
-  function fallback(text){
-    var ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
-    document.body.appendChild(ta); ta.focus(); ta.select();
-    try{ document.execCommand('copy'); }catch(e){}
-    document.body.removeChild(ta);
   }
 
   // copy buttons with data-target
@@ -508,41 +711,57 @@
   });
 
   // builder
-  var fields = {
-    Task: document.getElementById('bTask'),
-    Context: document.getElementById('bContext'),
-    Constraints: document.getElementById('bConstraints'),
-    Output: document.getElementById('bOutput')
+  var ids = ['bGoal','bWhy','bContext','bGood','bBounds','bOutput'];
+  var fields = ids.map(function(id){ return document.getElementById(id); });
+  var opts = {
+    oAsk: 'Before you start, ask me up to five questions about anything you need to know to do this well. Ask one at a time and wait for my answers.',
+    oPlan: 'Before you draft, show me a short plan and wait for my go-ahead.',
+    oUnsure: "If you're not sure about a fact or can't verify a source, say so rather than guessing."
   };
   var out = document.getElementById('assembledText');
   function assemble(){
     var parts = [];
-    if(fields.Task.value.trim()) parts.push(fields.Task.value.trim());
-    if(fields.Context.value.trim()) parts.push(fields.Context.value.trim());
-    if(fields.Constraints.value.trim()) parts.push(fields.Constraints.value.trim());
-    if(fields.Output.value.trim()) parts.push(fields.Output.value.trim());
+    fields.forEach(function(f){ var v=f.value.trim(); if(v) parts.push(v); });
+    var extra = [];
+    Object.keys(opts).forEach(function(k){ if(document.getElementById(k).checked) extra.push(opts[k]); });
+    if(extra.length) parts.push(extra.join(' '));
     return parts.join('\n\n');
   }
   function refresh(){
     var t = assemble();
     out.textContent = t ? t : 'Start typing above and your prompt will appear here…';
   }
-  Object.keys(fields).forEach(function(k){ fields[k].addEventListener('input', refresh); });
+  fields.forEach(function(f){ f.addEventListener('input', refresh); });
+  Object.keys(opts).forEach(function(k){ document.getElementById(k).addEventListener('change', refresh); });
 
   document.getElementById('copyAssembled').addEventListener('click', function(){
     var t = assemble();
     if(!t){ showToast('Fill in at least one box first'); return; }
-    copyText(t);
-    showToast('Assembled prompt copied');
+    copyText(t, null, 'Assembled prompt copied');
   });
   document.getElementById('clearBuilder').addEventListener('click', function(){
-    Object.keys(fields).forEach(function(k){ fields[k].value=''; });
+    fields.forEach(function(f){ f.value=''; });
+    Object.keys(opts).forEach(function(k){ document.getElementById(k).checked=false; });
     refresh();
   });
 
-  // verification checklist toggle
+  // copy all reflections
+  document.getElementById('copyReflections').addEventListener('click', function(){
+    var items = [];
+    document.querySelectorAll('textarea[data-label]').forEach(function(ta){
+      var v = ta.value.trim();
+      if(v) items.push(ta.getAttribute('data-label') + '\n' + v);
+    });
+    if(!items.length){ showToast('No reflections written yet'); return; }
+    copyText('Prompting Well — My Reflections\n\n' + items.join('\n\n'), null, 'Reflections copied');
+  });
+
+  // verification checklist toggle (keyboard accessible)
   document.querySelectorAll('#verifyList li').forEach(function(li){
-    li.addEventListener('click', function(){ li.classList.toggle('on'); });
+    li.setAttribute('role','checkbox'); li.setAttribute('aria-checked','false'); li.tabIndex = 0;
+    function toggle(){ var on = li.classList.toggle('on'); li.setAttribute('aria-checked', on ? 'true' : 'false'); }
+    li.addEventListener('click', toggle);
+    li.addEventListener('keydown', function(e){ if(e.key===' '||e.key==='Enter'){ e.preventDefault(); toggle(); } });
   });
 })();
 </script>
